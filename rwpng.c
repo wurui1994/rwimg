@@ -182,6 +182,11 @@ open_png_file_writing (const char *filename, int width, int height, int pixel_st
 
     data->png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
     assert(data->png_ptr != 0);
+	
+	if(pixel_stride == 4)
+	{
+		// data->pnmtype = 8;
+	}
 
     data->info_ptr = png_create_info_struct(data->png_ptr);
     assert(data->info_ptr != 0);
@@ -189,14 +194,20 @@ open_png_file_writing (const char *filename, int width, int height, int pixel_st
     if (setjmp (png_jmpbuf (data->png_ptr)))
 	assert(0);
 
+	int color_type = PNG_COLOR_TYPE_RGB;
+
     if (pixel_stride == 4)
-	png_set_filler(data->png_ptr, 0, PNG_FILLER_AFTER);
+	{
+		color_type = PNG_COLOR_TYPE_RGB_ALPHA;
+		puts("alpha");
+		// png_set_filler(data->png_ptr, 0, PNG_FILLER_AFTER);
+	}
 
     png_init_io(data->png_ptr, data->file);
 
     png_set_IHDR (data->png_ptr, data->info_ptr,
-		  width, height, 8, PNG_COLOR_TYPE_RGB,
-		  PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+		  width, height, 8, color_type,
+		  PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
     png_write_info(data->png_ptr, data->info_ptr);
 
@@ -218,12 +229,12 @@ png_write_lines (void *_data, unsigned char *lines, int num_lines)
 	assert(0);
 
     width = png_get_image_width (data->png_ptr, data->info_ptr);
-    if (data->pixel_stride != 3)
-    {
-	packed_line = (unsigned char*)malloc(width * 3);
-	assert(packed_line != 0);
-    }
-    else
+    // if (data->pixel_stride != 3)
+    // {
+	// packed_line = (unsigned char*)malloc(width * 3);
+	// assert(packed_line != 0);
+    // }
+    // else
 	packed_line = 0;
 
     for (i = 0; i < num_lines; ++i)
