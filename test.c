@@ -1,4 +1,6 @@
 // tcc -DRWIMG_PNG -DRWIMG_JPEG -DRWIMG_GIF -ljpeg -lpng -lgif readimage.c rwgif.c rwjpeg.c  rwpng.c writeimage.c -run test.c
+//  gcc -shared -static -DRWIMG_PNG -DRWIMG_JPEG -DRWIMG_GIF  readimage.c  rwgif.c  rwjpeg.c  rwpng.c  writeimage.c -ljpeg -lpng -lgif -lz -o rwimg.dll && strip rwimg.dll
+// tcc -DRWIMG_PNG -DRWIMG_JPEG -DRWIMG_GIF -L. -lrwimg -run test.c
 
 #include <stdio.h>
 #include <assert.h>
